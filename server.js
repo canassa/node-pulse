@@ -170,8 +170,14 @@ function get_facebook (params, callback) {
 
         res.on('end', function () {
             data = JSON.parse(data);
-            data = data.data.map(format_facebook);
-            callback(data);
+            if (data.data === undefined) {
+                console.log('Facebook error:', data);
+                callback(false);
+            }
+            else {
+                data = data.data.map(format_facebook);
+                callback(data);
+            }
         });
     });
 }
@@ -209,8 +215,10 @@ function fetch_data () {
     });
 
     get_facebook({query: config.query}, function (posts) {
-        FACEBOOK = posts;
-        TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK]);
+        if (posts !== false) {
+            FACEBOOK = posts;
+            TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK]);
+        }
     });
 }
 

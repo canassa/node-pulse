@@ -12,7 +12,9 @@ server.on("request", function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "X-Requested-With"
+        "Access-Control-Allow-Headers": "X-Requested-With",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
     });
 
     res.end(JSON.stringify(TOTAL));

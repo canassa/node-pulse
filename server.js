@@ -1,12 +1,18 @@
+'use strict';
 
-var http = require("http")
-  , https = require("https")
-  , authom = require("authom")
-  , querystring = require("querystring")
-  , _ = require('lodash')
-  , config = require('./config');
+/*jshint node:true */
+
+
+var http = require("http"),
+    https = require("https"),
+    authom = require("authom"),
+    querystring = require("querystring"),
+    _ = require('lodash'),
+    config = require('./config');
+
 
 var server = http.createServer();
+
 
 server.on("request", function (req, res) {
     res.writeHead(200, {
@@ -18,9 +24,7 @@ server.on("request", function (req, res) {
     });
 
     res.end(JSON.stringify(TOTAL));
-})
-
-
+});
 
 authom.createServer({
     service: 'twitter',
@@ -28,12 +32,12 @@ authom.createServer({
     secret: config.twitter.secret
 });
 
+
 authom.createServer({
     service: 'facebook',
     id: config.facebook.id,
     secret: config.facebook.secret
 });
-
 
 
 function format_google_plus (post) {
@@ -44,7 +48,7 @@ function format_google_plus (post) {
         user: post.actor.displayName,
         avatar: post.actor.image.url,
         message: post.title
-    }
+    };
 }
 
 
@@ -66,7 +70,7 @@ function format_twitter (post) {
         user: post.from_user,
         avatar: post.profile_image_url,
         message: post.text
-    }
+    };
 }
 
 
@@ -84,7 +88,7 @@ function format_facebook (post) {
         user: post.from.name,
         avatar: 'https://graph.facebook.com/' + post.from.id + '/picture',
         message: post.message
-    }
+    };
 }
 
 
@@ -279,22 +283,22 @@ authom.on("auth", function(req, res, data) {
     });
 
     res.end(template);
-})
+});
 
 
 authom.on("error", function (req, res, data) {
     console.log(data);
     console.log(req);
 
-    data = Buffer("An error occurred: " + JSON.stringify(data))
+    data = new Buffer("An error occurred: " + JSON.stringify(data));
 
     res.writeHead(500, {
         "Content-Type": "text/plain",
         "Content-Length": data.length
-    })
+    });
 
-    res.end(data)
-})
+    res.end(data);
+});
 
 authom.listen(server);
 server.listen(config.port);

@@ -260,24 +260,27 @@ fetch_data();
 setInterval(fetch_data, config.interval);
 
 
-
 authom.on("auth", function(req, res, data) {
-  var answer = Buffer(
-    "<html>" +
-      "<body>" +
-        "<div style='font: 300% sans-serif'>You are " + data.id + " on " + data.service + ".</div>" +
-        "<pre><code>" + JSON.stringify(data, null, 2) + "</code></pre>" +
-      "</body>" +
-    "</html>"
-  )
+    var login_data = {
+        service: data.service,
+        token: data.token,
+        secret: data.secret
+    };
 
-  res.writeHead(200, {
-    "Content-Type": "text/html",
-    "Content-Length": answer.length
-  })
+    var template = '<script>' +
+        'window.opener.postMessage(' + JSON.stringify(login_data) + ', "*");' +
+    '</script>';
 
-  res.end(answer)
+    res.writeHead(200, {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Content-Type": "text/html",
+        "Content-Length": template.length
+    });
+
+    res.end(template);
 })
+
 
 authom.on("error", function (req, res, data) {
     console.log(data);

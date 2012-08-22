@@ -10,7 +10,9 @@ var server = http.createServer();
 
 server.on("request", function (req, res) {
     res.writeHead(200, {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "X-Requested-With"
     });
 
     res.end(JSON.stringify(TOTAL));

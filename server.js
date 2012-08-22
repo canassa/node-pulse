@@ -107,7 +107,16 @@ function get_google_plus (params, callback) {
         });
 
         res.on('end', function () {
-            data = JSON.parse(data)
+            try {
+                data = JSON.parse(data);
+            }
+            catch (e) {
+                console.log("Unable to parse google plus stream");
+                console.log(data);
+
+                callback(GOOGLE);
+                return;
+            }
 
             if (data.error) {
                 callback({error: true});
@@ -141,7 +150,16 @@ function get_twitter (params, callback) {
         });
 
         res.on('end', function () {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            }
+            catch (e) {
+                console.log("Unable to parse twitter stream");
+                console.log(data);
+
+                callback(TWITTER);
+                return;
+            }
             data = data.results.map(format_twitter);
             callback(data);
         });
@@ -169,7 +187,18 @@ function get_facebook (params, callback) {
         });
 
         res.on('end', function () {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            }
+            catch (e) {
+                console.log("Unable to parse Facebook stream");
+                console.log(data);
+
+                callback(FACEBOOK);
+                return;
+            }
+
+
             if (data.data === undefined) {
                 console.log('Facebook error:', data);
                 callback(false);

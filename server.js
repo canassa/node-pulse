@@ -275,16 +275,20 @@ authom.on("auth", function(req, res, data) {
   res.end(answer)
 })
 
-authom.on("error", function(req, res, data){
-  data = Buffer("An error occurred: " + JSON.stringify(data))
+authom.on("error", function (req, res, data) {
+    console.log(data);
+    console.log(req);
 
-  res.writeHead(500, {
-    "Content-Type": "text/plain",
-    "Content-Length": data.length
-  })
+    data = Buffer("An error occurred: " + JSON.stringify(data))
 
-  res.end(data)
+    res.writeHead(500, {
+        "Content-Type": "text/plain",
+        "Content-Length": data.length
+    })
+
+    res.end(data)
 })
 
 authom.listen(server);
 server.listen(config.port);
+console.log('Listening on port ' + config.port);

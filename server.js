@@ -15,15 +15,19 @@ var server = http.createServer();
 
 
 server.on("request", function (req, res) {
-    res.writeHead(200, {
-        "Content-Type": "application/json; charset=utf-8",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "X-Requested-With",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache"
-    });
 
-    res.end(JSON.stringify(TOTAL));
+    if (req.url === '/get') {
+        res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "X-Requested-With",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+        });
+
+        res.end(JSON.stringify(TOTAL));
+    }
+
 });
 
 

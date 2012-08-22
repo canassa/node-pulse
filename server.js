@@ -26,6 +26,7 @@ server.on("request", function (req, res) {
     res.end(JSON.stringify(TOTAL));
 });
 
+
 authom.createServer({
     service: 'twitter',
     id: config.twitter.id,
@@ -288,7 +289,6 @@ authom.on("auth", function(req, res, data) {
 
 authom.on("error", function (req, res, data) {
     console.log(data);
-    console.log(req);
 
     data = new Buffer("An error occurred: " + JSON.stringify(data));
 
@@ -299,6 +299,7 @@ authom.on("error", function (req, res, data) {
 
     res.end(data);
 });
+
 
 authom.listen(server);
 server.listen(config.port);

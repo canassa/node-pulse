@@ -6,7 +6,8 @@
   "dependencies": {
     "authom": "0.4.x",
     "mocha": "1.3.x",
-    "lodash": "0.5.x"
+    "lodash": "0.5.x",
+    "oauth": "0.9.x"
   },
   "engines": {
     "node": "0.8.x",

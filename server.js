@@ -334,7 +334,7 @@ var get_avatar = {
     },
 
     facebook: function (data) {
-        return 'teste';
+        return 'https://graph.facebook.com/' + data.data.username + '/picture?type=square';
     }
 };
 
@@ -344,7 +344,7 @@ var get_user_name = {
     },
 
     facebook: function (data) {
-        return 'teste';
+        return data.data.name;
     }
 };
 

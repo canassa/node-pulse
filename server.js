@@ -5,6 +5,7 @@
 
 var http = require("http"),
     https = require("https"),
+    fs = require("fs"),
     authom = require("authom"),
     querystring = require("querystring"),
     _ = require('lodash'),
@@ -14,6 +15,9 @@ var http = require("http"),
 
 
 var server = http.createServer();
+
+var front_template = fs.readFileSync('front.js', 'utf-8').replace('{{ url }}', config.base_url);
+
 
 
 server.on("request", function (req, res) {
@@ -67,6 +71,15 @@ server.on("request", function (req, res) {
 
 
         });
+    }
+    else if (req.url === '/front.js') {
+        res.writeHead(200, {
+            "Content-Type": "application/javascript; charset=utf-8",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+        });
+
+        res.end(front_template);
     }
 
 });

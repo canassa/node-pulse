@@ -22,7 +22,7 @@ var front_template = fs.readFileSync('front.js', 'utf-8').replace('{{ url }}', c
 
 server.on("request", function (req, res) {
 
-    if (req.url === '/get') {
+    if (/^\/get/.test(req.url)) {
         res.writeHead(200, {
             "Content-Type": "application/json; charset=utf-8",
             "Access-Control-Allow-Origin": "*",
@@ -33,7 +33,7 @@ server.on("request", function (req, res) {
 
         res.end(JSON.stringify(TOTAL));
     }
-    else if (req.url === '/post') {
+    else if (/^\/post/.test(req.url)) {
         var body='';
 
         req.on('data', function (data) {
@@ -72,7 +72,7 @@ server.on("request", function (req, res) {
 
         });
     }
-    else if (req.url === '/front.js') {
+    else if (/^\/front\.js$/.test(req.url)) {
         res.writeHead(200, {
             "Content-Type": "application/javascript; charset=utf-8",
             "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -80,6 +80,12 @@ server.on("request", function (req, res) {
         });
 
         res.end(front_template);
+    }
+    else {
+        res.writeHead(404, {
+            "Content-Type": "text/plain"
+        });
+        res.end('404 Not Found');
     }
 
 });

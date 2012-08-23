@@ -61,12 +61,26 @@ server.on("request", function (req, res) {
                         "Access-Control-Allow-Headers": "X-Requested-With"
                     });
 
-                    res.end(JSON.stringify(data));
+                    res.end('{"result": "ok"}');
 
                 });
             }
             else if (post_data.service === 'facebook') {
                 var oa = new OAuth2(config.facebook.id,  config.facebook.secret, 'https://graph.facebook.com');
+                var msg = querystring.stringify({message: post_data.message});
+
+                oa._request("POST", 'https://graph.facebook.com/me/feed', {}, msg, post_data.token, function (e, d) {
+                    if (e) console.log('Facebook post error:', e);
+
+                    res.writeHead(200, {
+                        "Content-Type": "application/json; charset=utf-8",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Headers": "X-Requested-With"
+                    });
+
+                    res.end('{"result": "ok"}');
+
+                });
             }
 
 
@@ -101,7 +115,8 @@ authom.createServer({
 authom.createServer({
     service: 'facebook',
     id: config.facebook.id,
-    secret: config.facebook.secret
+    secret: config.facebook.secret,
+    scope: config.facebook.scope
 });
 
 

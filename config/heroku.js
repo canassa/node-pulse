@@ -12,7 +12,7 @@ module.exports = {
     facebook: {
         id: process.env.FACEBOOK_ID,
         secret: process.env.FACEBOOK_SECRET,
-        scope: []
+        scope: ['publish_stream']
     },
 
     google: {

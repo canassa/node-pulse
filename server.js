@@ -8,7 +8,8 @@ var http = require("http"),
     authom = require("authom"),
     querystring = require("querystring"),
     _ = require('lodash'),
-    config = require('./config');
+    config = require('./config'),
+    OAuth= require('oauth').OAuth;
 
 
 var server = http.createServer();
@@ -26,6 +27,38 @@ server.on("request", function (req, res) {
         });
 
         res.end(JSON.stringify(TOTAL));
+    }
+    else if (req.url === '/post') {
+        var body='';
+
+        req.on('data', function (data) {
+            body += data;
+        });
+
+        req.on('end',function () {
+
+            var post_data = querystring.parse(body);
+
+            var oa = new OAuth('https://twitter.com/oauth/request_token',
+                               'https://twitter.com/oauth/access_token',
+                               config.twitter.id, config.twitter.secret,
+                               '1.0A', 'http://node-pulse.herokuapp.com/auth/twitter', 'HMAC-SHA1');
+
+            oa.post('https://api.twitter.com/1/statuses/update.json',
+                    post_data.token, post_data.secret,
+                    {'status': post_data.message},
+                    function (error, data) {
+
+                res.writeHead(200, {
+                    "Content-Type": "application/json; charset=utf-8",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "X-Requested-With"
+                });
+
+                res.end(JSON.stringify(data));
+
+            });
+        });
     }
 
 });

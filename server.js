@@ -319,6 +319,7 @@ authom.on("auth", function(req, res, data) {
 
     var template = '<script>' +
         'window.opener.postMessage(' + JSON.stringify(login_data) + ', "*");' +
+        'window.close();' +
     '</script>';
 
     res.writeHead(200, {

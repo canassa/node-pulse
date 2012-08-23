@@ -2,6 +2,7 @@ module.exports = {
     port: process.env.PORT,
     query: process.env.QUERY,
     interval: process.env.INTERVAL || 60000,
+    base_url: process.env.BASE_URL,
 
     twitter: {
         id: process.env.TWITTER_ID,

@@ -277,7 +277,7 @@ function get_facebook (params, callback) {
                 callback(false);
             }
             else {
-                data = data.data.map(format_facebook);
+                data = data.data.filter(function (d) {return d.message !== undefined;}).map(format_facebook);
                 callback(data);
             }
         });

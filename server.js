@@ -328,12 +328,34 @@ function fetch_data () {
 fetch_data();
 setInterval(fetch_data, config.interval);
 
+var get_avatar = {
+    twitter: function (data) {
+        return 'https://api.twitter.com/1/users/profile_image?screen_name=' + data.data.screen_name + '&size=bigger'
+    },
+
+    facebook: function (data) {
+        return 'teste';
+    }
+};
+
+var get_user_name = {
+    twitter: function (data) {
+        return data.data.screen_name;
+    },
+
+    facebook: function (data) {
+        return 'teste';
+    }
+};
+
 
 authom.on("auth", function(req, res, data) {
     var login_data = {
         service: data.service,
         token: data.token,
-        secret: data.secret
+        secret: data.secret,
+        avatar: get_avatar[data.service](data),
+        user_name: get_user_name[data.service](data),
     };
 
     var template = '<script>' +

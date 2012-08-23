@@ -24,6 +24,6 @@ window.addEventListener('message', function (e) {
     CV.token = e.data.token;
     CV.secret = e.data.secret;
 
-    $('body').trigger("connected", {service: CV.service});
+    $('body').trigger("connected", {service: CV.service, user_name: e.data.user_name, avatar: e.data.avatar});
 
 }, false);

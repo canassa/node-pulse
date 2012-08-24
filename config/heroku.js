@@ -16,8 +16,8 @@ module.exports = {
     },
 
     google: {
-        id: process.env.GOOGLE_ID
-        secret: process.env.GOOGLE_SECRET
+        id: process.env.GOOGLE_ID,
+        secret: process.env.GOOGLE_SECRET,
         app_key: process.env.GOOGLE_APP_KEY
     }
 };

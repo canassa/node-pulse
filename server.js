@@ -11,13 +11,13 @@ var http = require("http"),
     _ = require('lodash'),
     config = require('./config'),
     OAuth = require('oauth').OAuth,
+    util = require('util'),
     OAuth2 = require("oauth").OAuth2;
 
 
 var server = http.createServer();
 
 var front_template = fs.readFileSync('front.js', 'utf-8').replace('{{ url }}', config.base_url);
-
 
 
 server.on("request", function (req, res) {
@@ -82,6 +82,29 @@ server.on("request", function (req, res) {
 
                 });
             }
+            else if (post_data.service === 'google') {
+
+                var data = {
+                    type: "google",
+                    id: (Date.now()) + 'x' + Math.round(Math.random() *1E18),
+                    created: Date.now(),
+                    user: post_data.user_name,
+                    avatar: post_data.avatar,
+                    message: post_data.message
+                };
+
+                LOCAL.push(data);
+                LOCAL.splice(50);
+
+                res.writeHead(200, {
+                    "Content-Type": "application/json; charset=utf-8",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "X-Requested-With"
+                });
+
+                res.end('{"result": "ok"}');
+
+            }
 
 
         });
@@ -119,7 +142,18 @@ authom.createServer({
     scope: config.facebook.scope
 });
 
+authom.createServer({
+    service: 'google',
+    id: config.google.id,
+    secret: config.google.secret
+});
 
+
+/**
+ * Normalizes a Google+ Post
+ * @param  {Object} post The post from the Google+ API
+ * @return {Object} The normalized Post
+ */
 function format_google_plus (post) {
     return {
         type: "google",
@@ -207,7 +241,10 @@ function get_google_plus (params, callback) {
             }
 
             if (data.error) {
-                callback({error: true});
+                util.error("Error in google plus stream");
+                util.error(JSON.stringify(data));
+
+                callback(GOOGLE);
                 return;
             }
 
@@ -315,6 +352,7 @@ exports.concat_posts = concat_posts;
 
 var TOTAL = [];
 
+var LOCAL = [];
 var GOOGLE = [];
 var TWITTER = [];
 var FACEBOOK = [];
@@ -323,29 +361,30 @@ var FACEBOOK = [];
 function fetch_data () {
     get_google_plus({query: config.query, key: config.google.secret}, function (posts) {
         GOOGLE = posts;
-        TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK]);
+        TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
     });
 
     get_twitter({query: config.query}, function (posts) {
         TWITTER = posts;
-        TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK]);
+        TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
     });
 
     get_facebook({query: config.query}, function (posts) {
         if (posts !== false) {
             FACEBOOK = posts;
-            TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK]);
+            TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
         }
     });
 }
 
 
-fetch_data();
-setInterval(fetch_data, config.interval);
-
 var get_avatar = {
     twitter: function (data) {
         return 'https://api.twitter.com/1/users/profile_image?screen_name=' + data.data.screen_name + '&size=bigger'
+    },
+
+    google: function (data) {
+        return data.data.picture ? data.data.picture + '?sz=50' : undefined;
     },
 
     facebook: function (data) {
@@ -356,6 +395,10 @@ var get_avatar = {
 var get_user_name = {
     twitter: function (data) {
         return data.data.screen_name;
+    },
+
+    google: function (data) {
+        return data.data.name;
     },
 
     facebook: function (data) {
@@ -401,6 +444,10 @@ authom.on("error", function (req, res, data) {
 
     res.end(data);
 });
+
+
+fetch_data();
+setInterval(fetch_data, config.interval);
 
 
 authom.listen(server);

@@ -87,7 +87,7 @@ server.on("request", function (req, res) {
                 var data = {
                     type: "google",
                     id: (Date.now()) + 'x' + Math.round(Math.random() *1E18),
-                    created: Date.now(),
+                    created: new Date(),
                     user: post_data.user_name,
                     avatar: post_data.avatar,
                     message: post_data.message

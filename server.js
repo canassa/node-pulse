@@ -359,7 +359,7 @@ var FACEBOOK = [];
 
 
 function fetch_data () {
-    get_google_plus({query: config.query, key: config.google.secret}, function (posts) {
+    get_google_plus({query: config.query, key: config.google.app_key}, function (posts) {
         GOOGLE = posts;
         TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
     });

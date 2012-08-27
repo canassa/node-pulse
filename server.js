@@ -257,6 +257,10 @@ function get_google_plus (params, callback) {
             data = data.items.map(format_google_plus);
             callback(data);
         });
+    }).on('error', function (e) {
+        console.log('Google fetch error: ' + e.message);
+        callback(GOOGLE);
+        return;
     });
 }
 
@@ -300,6 +304,10 @@ function get_twitter (params, callback) {
             data = data.results.map(format_twitter);
             callback(data);
         });
+    }).on('error', function (e) {
+        console.log('Twitter fetch error: ' + e.message);
+        callback(TWITTER);
+        return;
     });
 }
 
@@ -351,6 +359,10 @@ function get_facebook (params, callback) {
                 callback(data);
             }
         });
+    }).on('error', function (e) {
+        console.log('Facebook fetch error: ' + e.message);
+        callback(FACEBOOK);
+        return;
     });
 }
 

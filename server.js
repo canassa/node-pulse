@@ -229,6 +229,12 @@ function get_google_plus (params, callback) {
         });
 
         res.on('end', function () {
+            if (res.statusCode !== 200) {
+                util.error("Google responded with an invalid status: ", res.statusCode);
+                callback(GOOGLE);
+                return;
+            }
+
             try {
                 data = JSON.parse(data);
             }
@@ -275,6 +281,12 @@ function get_twitter (params, callback) {
         });
 
         res.on('end', function () {
+            if (res.statusCode !== 200) {
+                util.error("Twitter responded with an invalid status: ", res.statusCode);
+                callback(TWITTER);
+                return;
+            }
+
             try {
                 data = JSON.parse(data);
             }
@@ -312,6 +324,12 @@ function get_facebook (params, callback) {
         });
 
         res.on('end', function () {
+            if (res.statusCode !== 200) {
+                util.error("Facebook responded with an invalid status: ", res.statusCode);
+                callback(FACEBOOK);
+                return;
+            }
+
             try {
                 data = JSON.parse(data);
             }

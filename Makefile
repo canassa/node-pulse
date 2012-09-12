@@ -2,12 +2,13 @@ TESTS = test/*.js
 REPORTER = dot
 
 test:
-	@./node_modules/.bin/mocha \
+	@NODE_ENV=development \
+	./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		$(TESTS)
 
 run:
 	@NODE_ENV=development \
-	node server.js
+	nodemon server.js
 
 .PHONY: test

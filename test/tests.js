@@ -35,3 +35,57 @@ describe('Concat posts', function () {
         assert.equal(50, s.concat_posts(_.range(100)).length);
     })
 })
+
+
+describe('Filter bad words', function () {
+    it('should remove posts with bad words', function () {
+        var list = [{message: 'merda frita'}]
+        list = s.filter_bad_words(list, ['merda']);
+        assert.equal(0, list.length);
+    })
+
+    it('should not remove a post if it doesnt contain a bad word', function () {
+        var list = [{message: 'teste'}]
+        list = s.filter_bad_words(list, ['merda']);
+        assert.equal(1, list.length);
+    })
+
+    it('should only remove ofensive messages', function () {
+        var list = [{message: 'merda'}, {message: 'teste'}]
+        list = s.filter_bad_words(list, ['merda']);
+        assert.equal(1, list.length);
+        assert.equal('teste', list[0].message);
+    })
+
+    it('should remove multiple bad words', function () {
+        var list = [{message: 'Hello word'},
+                    {message: 'merda'},
+                    {message: 'bosta'},
+                    {message: 'caralho'},
+                    {message: 'Oi gente'},
+                    {message: 'hello caralho bosta'}]
+
+        list = s.filter_bad_words(list, ['merda', 'bosta', 'caralho']);
+        assert.equal(2, list.length);
+        assert.equal('Hello word', list[0].message);
+        assert.equal('Oi gente', list[1].message);
+    })
+
+    it('should be case insensitive', function () {
+        var list = [{message: 'MERDA'}, {message: 'Merda'}]
+        list = s.filter_bad_words(list, ['merda']);
+        assert.equal(0, list.length);
+    })
+
+    it('should ignore accents', function () {
+        var list = [{message: 'mérda'}, {message: 'merda'}]
+        list = s.filter_bad_words(list, ['merda']);
+        assert.equal(0, list.length);
+    })
+})
+
+describe('Remove diacritics', function () {
+    it('should remove all accents', function () {
+        assert.equal('aeiouaeiouaeiouaeiou', s.remove_diacritics('ãeiõuáéíóúàèìòùâêîôû'));
+    })
+})

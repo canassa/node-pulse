@@ -415,18 +415,18 @@ var FACEBOOK = [];
 
 function fetch_data () {
     get_google_plus({query: config.query, key: config.google.app_key}, function (posts) {
-        GOOGLE = filter_bad_words(posts);
+        GOOGLE = filter_bad_words(posts, BAD_WORDS);
         TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
     });
 
     get_twitter({query: config.query}, function (posts) {
-        TWITTER = filter_bad_words(posts);
+        TWITTER = filter_bad_words(posts, BAD_WORDS);
         TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
     });
 
     get_facebook({query: config.query}, function (posts) {
         if (posts !== false) {
-            FACEBOOK = filter_bad_words(posts);
+            FACEBOOK = filter_bad_words(posts, BAD_WORDS);
             TOTAL = concat_posts([GOOGLE, TWITTER, FACEBOOK, LOCAL]);
         }
     });
